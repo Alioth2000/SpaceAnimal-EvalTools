@@ -4,16 +4,16 @@ import argparse
 
 from evaluateTracking import evaluateTracking
 import eval_helpers
-from eval_helpers import Worm, Fish, Fly
+from eval_helpers import Worm, Fish, Fly, Fly_6
 
 
 def parseArgs():
 
     parser = argparse.ArgumentParser(description="Evaluation of Pose Tracking (PoseTrack)")
     parser.add_argument("-g", "--groundTruth",required=False,type=str,help="Directory containing ground truth annotatations per sequence in json format",
-                        default="eval_tools/examples/posetrack_gts/")
+                        default="eval_tools/examples/gts/")
     parser.add_argument("-p", "--predictions",required=False,type=str,help="Directory containing predictions per sequence in json format",
-                        default="eval_tools/examples/posetrack_preds/")
+                        default="eval_tools/examples/res/")
     parser.add_argument("-c", "--species", required=False, type=str,help="Choose animal species from worm, zebrafish, drosophila",
                         default="worm")
     parser.add_argument("-s","--saveEvalPerSequence",required=False,action="store_true",help="Save evaluation results per sequence",
@@ -33,6 +33,8 @@ def main():
         Joint = Fish
     elif args.species == 'drosophila':
         Joint = Fly
+    elif args.species == 'drosophila-6':
+        Joint = Fly_6
     else:
         raise ValueError("Unknown species")
 

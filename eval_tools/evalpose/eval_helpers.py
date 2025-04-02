@@ -111,6 +111,25 @@ class Fly:
         self.name[self.rightwing]  = "rightwing"
 
 
+class Fly_6:
+    def __init__(self):
+        self.count = 6
+        self.mouth = 0
+        self.back = 1
+        self.maw = 2
+        self.tail = 3
+        self.leftwing = 4
+        self.rightwing = 5
+
+        self.name = {}
+        self.name[self.mouth]      = "mouth"
+        self.name[self.back]       = "back"
+        self.name[self.maw]        = "maw"
+        self.name[self.tail]       = "tail"
+        self.name[self.leftwing]   = "leftwing"
+        self.name[self.rightwing]  = "rightwing"
+
+
 def getPointGTbyID(points,pidx):
     point = []
     for i in range(len(points)):
@@ -368,9 +387,16 @@ def removeNoGT(gt, pr):
   for anno in gt:
     gts.append(anno["image"][0]["name"])
   prs = []
+  prs_name = []
   for anno in pr:
     if anno["image"][0]["name"] in gts:
       prs.append(anno)
+      prs_name.append(anno["image"][0]["name"])
+  for img_name in gts:
+    if img_name not in prs_name:
+      print("No prediction for", img_name)
+      empt_anno = {"image": [{"name": img_name}], "annorect": []}
+      prs.append(empt_anno)
   return prs
 
 
@@ -415,6 +441,8 @@ def load_data_dir(argv):
     if len(pr) != len(gt):
       # raise Exception('# prediction frames %d <> # GT frames %d for %s' % (len(pr),len(gt),predFilename))
       pr = removeNoGT(gt, pr)
+    if len(pr) != len(gt):
+        raise Exception('# prediction frames %d <> # GT frames %d for %s' % (len(pr),len(gt),predFilename))
     for imgidx in range(len(pr)):
         track_id_frame = []
         for ridxPr in range(len(pr[imgidx]["annorect"])):
